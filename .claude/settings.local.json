@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(mkdir -p .github/workflows newsletter/ingestion newsletter/processing newsletter/rendering/delivery data tests)",
+      "Bash(touch newsletter/__init__.py newsletter/ingestion/__init__.py newsletter/processing/__init__.py newsletter/rendering/__init__.py newsletter/rendering/delivery/__init__.py)",
+      "Bash(pip install:*)",
+      "Bash(python -c \":*)",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -c \":*)"
+    ]
+  }
+}
