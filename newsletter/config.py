@@ -3,7 +3,7 @@ from __future__ import annotations
 CLAUDE_MODEL = "claude-sonnet-4-6"
 MAX_ITEMS_PER_SOURCE = 10
 ARXIV_MAX_ITEMS = 5
-LOOKBACK_HOURS = 170  # ~7 days + buffer
+LOOKBACK_HOURS = 90  # ~3.5 days + buffer
 TOP_N_FINAL = 20
 MIN_RELEVANCE_SCORE = 6
 MAX_TOKENS_PER_BATCH = 1500
