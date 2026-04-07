@@ -2,8 +2,8 @@ name: Daily AI Newsletter
 
 on:
   schedule:
-    # 12:00 UTC = 8am ET / 5am PT
-    - cron: '0 12 * * *'
+    # Every Monday at 12:00 UTC = 8am ET / 5am PT
+    - cron: '0 12 * * 1'
   workflow_dispatch:  # Allow manual trigger for testing
 
 permissions:
