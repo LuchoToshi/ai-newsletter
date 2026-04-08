@@ -37,7 +37,7 @@ def _strip_code_fences(text: str) -> str:
 
 
 def _call_with_retry(client: anthropic.Anthropic, **kwargs) -> str:
-    delays = [2, 4, 8]
+    delays = [10, 30, 60]
     last_exc: Exception | None = None
     for attempt, delay in enumerate(delays, 1):
         try:

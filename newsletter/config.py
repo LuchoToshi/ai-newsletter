@@ -30,11 +30,11 @@ ARXIV_KEYWORDS = [
 
 RSS_SOURCES: list[dict] = [
     # Research labs
-    {"name": "Anthropic Blog",       "url": "https://www.anthropic.com/rss.xml",                                       "category": "lab"},
+    {"name": "Anthropic Blog",       "url": "https://www.anthropic.com/news/rss.xml",                                   "category": "lab"},
     {"name": "OpenAI Blog",          "url": "https://openai.com/blog/rss.xml",                                         "category": "lab"},
     {"name": "DeepMind Blog",        "url": "https://deepmind.google/blog/rss.xml",                                    "category": "lab"},
     {"name": "Google AI Blog",       "url": "https://blog.google/technology/ai/rss/",                                  "category": "lab"},
-    {"name": "Meta AI Blog",         "url": "https://ai.meta.com/blog/rss/",                                           "category": "lab"},
+    {"name": "Meta AI Blog",         "url": "https://engineering.fb.com/category/ml-applications/feed/",              "category": "lab"},
     {"name": "HuggingFace Blog",     "url": "https://huggingface.co/blog/feed.xml",                                    "category": "tools"},
     # Research feeds
     {"name": "ArXiv cs.AI",          "url": "https://rss.arxiv.org/rss/cs.AI",                                        "category": "research", "arxiv": True},
