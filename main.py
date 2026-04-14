@@ -18,7 +18,7 @@ from pathlib import Path
 
 if os.path.exists(".env"):
     from dotenv import load_dotenv
-    load_dotenv()
+    load_dotenv(override=True)
 
 from newsletter.config import RSS_SOURCES
 from newsletter.ingestion.rss_reader import fetch_all_rss
@@ -31,7 +31,7 @@ from newsletter.rendering.delivery.resend_sender import ResendSender
 
 
 async def run(dry_run: bool, skip_send: bool, save_html: bool) -> None:
-    date_str = datetime.now(timezone.utc).strftime("%A, %B %-d, %Y")
+    date_str = datetime.now(timezone.utc).strftime("%B %d, %Y")
     print(f"\n{'='*50}")
     print(f"  Signal AI Newsletter — {date_str}")
     print(f"{'='*50}\n")

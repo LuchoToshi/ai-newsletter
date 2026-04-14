@@ -1,12 +1,21 @@
 from __future__ import annotations
 
 import html
-from datetime import datetime
+from collections import defaultdict
 
 from newsletter.processing.ranker import ScoredItem
 from newsletter.rendering.styles import COLORS, FONTS, CATEGORY_TAG_STYLES
 
 NEWSLETTER_NAME = "Signal AI"
+
+SECTION_ORDER = [
+    "Models & Labs",
+    "Agents & Automation",
+    "Infrastructure & Tooling",
+    "Products & Startups",
+    "Research",
+    "Strategy & Business",
+]
 
 
 def _esc(text: str) -> str:
@@ -82,54 +91,6 @@ def _story_card(item: ScoredItem, compact: bool = False) -> str:
 <tr><td style="height:10px;"></td></tr>"""
 
 
-def _top_story_block(item: ScoredItem) -> str:
-    date_str = item.published.strftime("%-d %b") if item.published else ""
-    tag = _tag_pill(item.category_tag)
-
-    why_block = ""
-    if item.why_it_matters:
-        why_block = f"""
-    <div style="margin-top:12px;padding:10px 14px;background:{COLORS['card_bg']};
-                border-left:3px solid {COLORS['accent']};border-radius:0 4px 4px 0;">
-      <p style="margin:0;font-size:13px;color:{COLORS['text_secondary']};font-style:italic;">
-        <strong style="color:{COLORS['text_primary']};font-style:normal;">Why it matters:</strong> {_esc(item.why_it_matters)}
-      </p>
-    </div>"""
-
-    return f"""
-<tr>
-  <td style="padding:20px;background:{COLORS['top_story_bg']};
-             border:2px solid {COLORS['top_story_border']};border-radius:8px;">
-    <table width="100%" cellpadding="0" cellspacing="0">
-      <tr>
-        <td>
-          <span style="font-size:10px;font-weight:700;letter-spacing:1px;
-                       color:{COLORS['accent']};text-transform:uppercase;">TOP STORY</span>
-          &nbsp;&nbsp;{tag}
-        </td>
-        <td align="right" style="font-size:11px;color:{COLORS['text_muted']};">
-          {_esc(item.source)} &middot; {_esc(date_str)}
-        </td>
-      </tr>
-    </table>
-    <h2 style="margin:10px 0 10px;font-size:18px;font-weight:800;line-height:1.3;">
-      <a href="{_esc(item.url)}" style="color:{COLORS['text_primary']};text-decoration:none;">{_esc(item.title)}</a>
-    </h2>
-    <p style="margin:0;font-size:14px;color:{COLORS['text_secondary']};line-height:1.7;">
-      {_esc(item.summary)}
-    </p>
-    {why_block}
-    <p style="margin:14px 0 0;">
-      <a href="{_esc(item.url)}"
-         style="display:inline-block;padding:8px 16px;background:{COLORS['accent']};
-                color:#ffffff;font-size:13px;font-weight:600;text-decoration:none;
-                border-radius:6px;">Read more &rarr;</a>
-    </p>
-  </td>
-</tr>
-<tr><td style="height:14px;"></td></tr>"""
-
-
 def _section_header(title: str) -> str:
     return f"""
 <tr>
@@ -142,40 +103,38 @@ def _section_header(title: str) -> str:
 
 
 def build_email_html(items: list[ScoredItem], intro: str, date_str: str) -> str:
-    # Partition items into sections
-    top_story = next((i for i in items if i.score >= 9), None)
-    main_items = [i for i in items if i != top_story and i.score >= 7]
-    quick_hits = [i for i in items if i != top_story and i.score < 7]
-    research_items = [i for i in items if i.is_arxiv]
-    # Remove research items from main/quick if they have their own section
-    if research_items:
-        main_items = [i for i in main_items if not i.is_arxiv]
-        quick_hits = [i for i in quick_hits if not i.is_arxiv]
+    # Group items by category tag
+    by_section: dict[str, list[ScoredItem]] = defaultdict(list)
+    for item in items:
+        tag = item.category_tag if item.category_tag in SECTION_ORDER else "Strategy & Business"
+        by_section[tag].append(item)
 
     rows = ""
+    for section in SECTION_ORDER:
+        section_items = by_section.get(section, [])
+        if not section_items:
+            continue
 
-    if top_story:
-        rows += _section_header("Top Story")
-        rows += _top_story_block(top_story)
+        rows += _section_header(section)
 
-    if main_items:
-        rows += _section_header("Main Stories")
-        for item in main_items:
-            rows += _story_card(item)
+        if section == "Research":
+            # Research always compact, max 4 items
+            rows += '<tr><td><table width="100%" cellpadding="0" cellspacing="0">'
+            for item in section_items[:4]:
+                rows += _story_card(item, compact=True)
+            rows += "</table></td></tr>"
+        else:
+            full_cards = [i for i in section_items if i.score >= 7]
+            compact_items = [i for i in section_items if i.score < 7]
 
-    if quick_hits:
-        rows += _section_header("Quick Hits")
-        rows += '<tr><td><table width="100%" cellpadding="0" cellspacing="0">'
-        for item in quick_hits:
-            rows += _story_card(item, compact=True)
-        rows += "</table></td></tr>"
+            for item in full_cards:
+                rows += _story_card(item)
 
-    if research_items:
-        rows += _section_header("Research Spotlight")
-        rows += '<tr><td><table width="100%" cellpadding="0" cellspacing="0">'
-        for item in research_items[:4]:
-            rows += _story_card(item, compact=True)
-        rows += "</table></td></tr>"
+            if compact_items:
+                rows += '<tr><td><table width="100%" cellpadding="0" cellspacing="0">'
+                for item in compact_items:
+                    rows += _story_card(item, compact=True)
+                rows += "</table></td></tr>"
 
     intro_html = "".join(f"<p>{_esc(p)}</p>" for p in intro.split("\n\n") if p.strip())
 
@@ -204,7 +163,7 @@ def build_email_html(items: list[ScoredItem], intro: str, date_str: str) -> str:
                     {NEWSLETTER_NAME}
                   </h1>
                   <p style="margin:2px 0 0;font-size:12px;color:{COLORS['text_muted']};">
-                    High-signal AI, daily.
+                    Sharp AI signal, twice a week.
                   </p>
                 </td>
                 <td align="right">
@@ -220,7 +179,7 @@ def build_email_html(items: list[ScoredItem], intro: str, date_str: str) -> str:
           <td style="padding:16px;margin-top:16px;background:{COLORS['card_bg']};
                      border-radius:8px;border-left:4px solid {COLORS['accent']};">
             <p style="margin:0 0 6px;font-size:10px;font-weight:700;letter-spacing:1px;
-                      text-transform:uppercase;color:{COLORS['accent']};">Editor's Note</p>
+                      text-transform:uppercase;color:{COLORS['accent']};">Editor's note</p>
             <div style="font-size:13px;color:{COLORS['text_secondary']};line-height:1.7;">
               {intro_html}
             </div>
@@ -228,7 +187,7 @@ def build_email_html(items: list[ScoredItem], intro: str, date_str: str) -> str:
         </tr>
         <tr><td style="height:16px;"></td></tr>
 
-        <!-- Stories -->
+        <!-- Stories by section -->
         {rows}
 
         <!-- Footer -->
@@ -237,9 +196,6 @@ def build_email_html(items: list[ScoredItem], intro: str, date_str: str) -> str:
                      text-align:center;">
             <p style="margin:0;font-size:11px;color:{COLORS['text_muted']};">
               {NEWSLETTER_NAME} &middot; Powered by Claude API &amp; GitHub Actions
-            </p>
-            <p style="margin:4px 0 0;font-size:11px;color:{COLORS['text_muted']};">
-              You're receiving this because you set it up. No unsubscribe needed.
             </p>
           </td>
         </tr>

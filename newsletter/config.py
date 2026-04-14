@@ -26,11 +26,17 @@ ARXIV_KEYWORDS = [
     "vision language",
     "chain of thought",
     "in-context learning",
+    "autonomous agent",
+    "tool use",
+    "agentic",
+    "retrieval augmented",
+    "inference optimization",
+    "model routing",
+    "workflow automation",
 ]
 
 RSS_SOURCES: list[dict] = [
     # Research labs
-    {"name": "Anthropic Blog",       "url": "https://www.anthropic.com/news/rss.xml",                                   "category": "lab"},
     {"name": "OpenAI Blog",          "url": "https://openai.com/blog/rss.xml",                                         "category": "lab"},
     {"name": "DeepMind Blog",        "url": "https://deepmind.google/blog/rss.xml",                                    "category": "lab"},
     {"name": "Google AI Blog",       "url": "https://blog.google/technology/ai/rss/",                                  "category": "lab"},
@@ -46,13 +52,22 @@ RSS_SOURCES: list[dict] = [
     {"name": "MIT Tech Review AI",   "url": "https://www.technologyreview.com/feed/",                                 "category": "media"},
     {"name": "TechCrunch AI",        "url": "https://techcrunch.com/category/artificial-intelligence/feed/",          "category": "media"},
     {"name": "VentureBeat AI",       "url": "https://venturebeat.com/category/ai/feed/",                              "category": "media"},
+    # Builders & thinkers
+    {"name": "Latent Space",         "url": "https://www.latent.space/feed",                                          "category": "builders"},
+    {"name": "swyx",                 "url": "https://swyx.io/rss.xml",                                                "category": "builders"},
+    {"name": "Andrej Karpathy",      "url": "https://karpathy.github.io/feed.xml",                                    "category": "builders"},
+    {"name": "Pieter Levels",        "url": "https://levels.io/rss/",                                                 "category": "builders"},
+    {"name": "Daniel Gross",         "url": "https://danielgross.substack.com/feed",                                  "category": "builders"},
+    {"name": "Logan Kilpatrick",     "url": "https://logankilpatrick.substack.com/feed",                              "category": "builders"},
+    # Strategy
+    {"name": "Stratechery",          "url": "https://stratechery.com/feed/",                                          "category": "strategy"},
 ]
 
 # Hacker News Algolia search queries (stories with >50 points in last 24h)
 HN_QUERIES = [
-    "artificial intelligence",
-    "large language model",
-    "machine learning",
-    "GPT Claude Gemini",
+    "AI agents autonomous",
+    "LLM infrastructure tooling",
+    "AI startup founder",
+    "multimodal model",
 ]
 HN_MIN_POINTS = 50
