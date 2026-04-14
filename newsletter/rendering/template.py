@@ -53,6 +53,8 @@ def _story_card(item: ScoredItem, compact: bool = False) -> str:
     </p>
     <p style="margin:6px 0 0;font-size:12px;color:{COLORS['text_muted']};">
       via <strong>{_esc(item.source)}</strong>
+      &nbsp;&middot;&nbsp;
+      <a href="{_esc(item.url)}" style="color:{COLORS['accent']};text-decoration:none;font-weight:600;">Read article &rarr;</a>
     </p>
   </td>
 </tr>"""
@@ -86,6 +88,10 @@ def _story_card(item: ScoredItem, compact: bool = False) -> str:
       {_esc(item.summary)}
     </p>
     {why_block}
+    <p style="margin:10px 0 0;font-size:12px;color:{COLORS['text_muted']};">
+      <a href="{_esc(item.url)}" style="color:{COLORS['accent']};text-decoration:none;font-weight:600;">Read article &rarr;</a>
+      &nbsp;&middot;&nbsp;{_esc(item.source)}
+    </p>
   </td>
 </tr>
 <tr><td style="height:10px;"></td></tr>"""

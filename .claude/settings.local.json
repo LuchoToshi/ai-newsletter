@@ -7,7 +7,27 @@
       "Bash(pip install:*)",
       "Bash(python -c \":*)",
       "Bash(pip3 install:*)",
-      "Bash(python3 -c \":*)"
+      "Bash(python3 -c \":*)",
+      "Read(//Users/shariffshariff/.claude/get-shit-done/bin/**)",
+      "Read(//Users/shariffshariff/.claude/get-shit-done/**)",
+      "Bash(node ~/.claude/get-shit-done/bin/gsd-tools.cjs)",
+      "Bash(npx skills:*)",
+      "Bash(ollama --version)",
+      "Bash(ollama list:*)",
+      "mcp__Apify__apify-slash-rag-web-browser",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(p['name']\\) for p in data.get\\('plugins',[]\\)]\")",
+      "Read(//private/tmp/superpowers/commands/**)",
+      "Read(//private/tmp/superpowers/skills/**)",
+      "Read(//private/tmp/superpowers/**)",
+      "Bash(cat /tmp/superpowers/hooks/*.json)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('hooks',{}\\), indent=2\\)\\)\")",
+      "Bash(brew list:*)",
+      "Bash(brew services:*)",
+      "Bash(createdb reddit_intel)",
+      "Bash(psql -d reddit_intel -c \"SELECT current_user;\")"
     ]
   }
 }
