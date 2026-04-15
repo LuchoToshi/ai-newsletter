@@ -1,10 +1,7 @@
 name: Daily AI Newsletter
 
 on:
-  schedule:
-    # Every day at 07:00 UTC = 9am Amsterdam (CEST)
-    - cron: '0 7 * * *'
-  workflow_dispatch:  # Allow manual trigger for testing
+  workflow_dispatch:  # Triggered externally by cron-job.org daily at 07:00 UTC
 
 permissions:
   contents: write  # Required to commit seen_urls.json back to the repo
