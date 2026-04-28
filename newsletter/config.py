@@ -6,7 +6,7 @@ ARXIV_MAX_ITEMS = 5
 LOOKBACK_HOURS = 90  # ~3.5 days + buffer
 TOP_N_FINAL = 20
 MIN_RELEVANCE_SCORE = 6
-MAX_TOKENS_PER_BATCH = 1500
+MAX_TOKENS_PER_BATCH = 4000
 CLAUDE_BATCH_SIZE = 15
 
 # Keywords used to pre-filter ArXiv abstracts (case-insensitive)
