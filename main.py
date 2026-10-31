@@ -26,12 +26,12 @@ from newsletter.ingestion.hn_fetcher import fetch_hn_stories
 from newsletter.ingestion.scraper import enrich_items
 from newsletter.ingestion.dedup import SeenURLStore
 from newsletter.processing.ranker import NewsRanker
-from newsletter.rendering.template import build_email_html, build_plain_text, build_subject
+from newsletter.rendering.template import build_email_html, build_plain_text, build_subject, format_date_nl
 from newsletter.rendering.delivery.resend_sender import ResendSender
 
 
 async def run(dry_run: bool, skip_send: bool, save_html: bool) -> None:
-    date_str = datetime.now(timezone.utc).strftime("%B %d, %Y")
+    date_str = format_date_nl(datetime.now(timezone.utc))
     print(f"\n{'='*50}")
     print(f"  Signal AI Newsletter — {date_str}")
     print(f"{'='*50}\n")

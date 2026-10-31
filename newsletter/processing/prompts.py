@@ -12,12 +12,12 @@ For each item return a JSON object with:
     8-9 = highly significant (notable model update, important research with real implications, major product launch)
     6-7 = noteworthy (solid research, relevant product update, meaningful industry move)
     below 6 = noise, minor update, or rehash — do NOT include in output
-- "headline": rewritten headline, max 80 chars. Direct and descriptive. No clickbait, no vague phrasing.
-- "summary": 2-3 sentences. What happened, the key detail, and the implication. Plain English. \
+- "headline": rewritten headline in Dutch, max 80 chars. Direct and descriptive. No clickbait, no vague phrasing.
+- "summary": 2-3 sentences in Dutch. What happened, the key detail, and the implication. Plain Dutch. \
 Write like you're explaining it to a smart friend, not presenting a report.
-- "category_tag": exactly one of: Models & Labs | Agents & Automation | Infrastructure & Tooling | \
+- "category_tag": exactly one of these English values, unchanged: Models & Labs | Agents & Automation | Infrastructure & Tooling | \
 Products & Startups | Research | Strategy & Business
-- "why_it_matters": one sentence. What a founder or builder should take away and potentially act on.
+- "why_it_matters": one sentence in Dutch. What a founder or builder should take away and potentially act on.
 
 CATEGORY DEFINITIONS:
 - Models & Labs: model releases, capability updates, and announcements from Anthropic, OpenAI, Google, Meta, Mistral, and other frontier labs
@@ -49,11 +49,14 @@ DEPRIORITIZE — score 1-2 points lower unless there is exceptional substance:
 - Regulatory updates with no direct product or market impact
 
 TONE AND STYLE — apply to all text fields:
+- Write headline, summary and why_it_matters in natural Dutch, the way a Dutch tech founder talks. Never a literal translation of the source
+- Keep company, product and model names as they are, and keep English tech terms Dutch builders actually use (model, agent, API, open source, startup, inference)
+- No em dashes
 - Write like explaining to a smart friend, not presenting a report
 - No jargon unless necessary; if you use a technical term, briefly explain it inline
 - No hype words: "revolutionary", "game-changing", "unprecedented", "groundbreaking"
 - Headlines: direct and descriptive, max 80 chars, no clickbait
-- Summaries: what happened, the key detail, the implication — 2-3 sentences, plain English
+- Summaries: what happened, the key detail, the implication — 2-3 sentences, plain Dutch
 - Why it matters: one clear sentence a founder could act on
 
 Items:
@@ -70,13 +73,14 @@ Based on today's top stories (listed below), write a 3-4 sentence editorial note
 - Notes anything surprising or counterintuitive
 - Sets up why today's edition matters
 
+Write in natural Dutch, never a literal translation. Keep company and product names and common English tech terms. No em dashes. \
 Write conversationally — like a sharp colleague sending a Slack message, not a press release. \
 No filler. No phrases like "in the ever-evolving landscape" or "it's an exciting time for AI."
 
 If today's stories quote or feature any of these people, note it: \
 Andrej Karpathy, Sam Altman, Amjad Masad, Yann LeCun, Geoffrey Hinton, \
 Fei-Fei Li, Ilya Sutskever, Andrew Ng, Nat Friedman, Daniel Gross, Sarah Guo, \
-Pieter Levels, Shawn Wang, Linus Ekenstam.
+Pieter Levels, Shawn Wang, Linus Ekenstam. If none of them appear, say nothing about it.
 
 Today's top stories:
 {titles}

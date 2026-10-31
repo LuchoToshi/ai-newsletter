@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import html
 from collections import defaultdict
+from datetime import datetime
 
 from newsletter.processing.ranker import ScoredItem
 from newsletter.rendering.styles import COLORS, FONTS, CATEGORY_TAG_STYLES
@@ -17,6 +18,29 @@ SECTION_ORDER = [
     "Strategy & Business",
 ]
 
+# category_tag values stay English: they key SECTION_ORDER and CATEGORY_TAG_STYLES.
+SECTION_LABELS = {
+    "Models & Labs": "Modellen & labs",
+    "Agents & Automation": "Agents & automatisering",
+    "Infrastructure & Tooling": "Infrastructuur & tooling",
+    "Products & Startups": "Producten & startups",
+    "Research": "Onderzoek",
+    "Strategy & Business": "Strategie & business",
+}
+
+DUTCH_MONTHS = [
+    "januari", "februari", "maart", "april", "mei", "juni",
+    "juli", "augustus", "september", "oktober", "november", "december",
+]
+
+
+def format_date_nl(date: datetime) -> str:
+    return f"{date.day} {DUTCH_MONTHS[date.month - 1]} {date.year}"
+
+
+def _short_date_nl(date: datetime) -> str:
+    return f"{date.day} {DUTCH_MONTHS[date.month - 1][:3]}"
+
 
 def _esc(text: str) -> str:
     return html.escape(text)
@@ -27,12 +51,12 @@ def _tag_pill(category: str) -> str:
     return (
         f'<span style="display:inline-block;padding:2px 8px;border-radius:9999px;'
         f'font-size:11px;font-weight:600;letter-spacing:.3px;'
-        f'background:{bg};color:{fg};">{_esc(category)}</span>'
+        f'background:{bg};color:{fg};">{_esc(SECTION_LABELS.get(category, category))}</span>'
     )
 
 
 def _story_card(item: ScoredItem, compact: bool = False) -> str:
-    date_str = item.published.strftime("%-d %b") if item.published else ""
+    date_str = _short_date_nl(item.published) if item.published else ""
     tag = _tag_pill(item.category_tag)
 
     if compact:
@@ -54,7 +78,7 @@ def _story_card(item: ScoredItem, compact: bool = False) -> str:
     <p style="margin:6px 0 0;font-size:12px;color:{COLORS['text_muted']};">
       via <strong>{_esc(item.source)}</strong>
       &nbsp;&middot;&nbsp;
-      <a href="{_esc(item.url)}" style="color:{COLORS['accent']};text-decoration:none;font-weight:600;">Read article &rarr;</a>
+      <a href="{_esc(item.url)}" style="color:{COLORS['accent']};text-decoration:none;font-weight:600;">Lees artikel &rarr;</a>
     </p>
   </td>
 </tr>"""
@@ -65,7 +89,7 @@ def _story_card(item: ScoredItem, compact: bool = False) -> str:
     <div style="margin-top:10px;padding:8px 12px;background:{COLORS['why_bg']};
                 border-left:3px solid {COLORS['accent']};border-radius:0 4px 4px 0;">
       <p style="margin:0;font-size:12px;color:{COLORS['text_secondary']};font-style:italic;">
-        <strong style="color:{COLORS['text_primary']};font-style:normal;">Why it matters:</strong> {_esc(item.why_it_matters)}
+        <strong style="color:{COLORS['text_primary']};font-style:normal;">Waarom dit telt:</strong> {_esc(item.why_it_matters)}
       </p>
     </div>"""
 
@@ -89,7 +113,7 @@ def _story_card(item: ScoredItem, compact: bool = False) -> str:
     </p>
     {why_block}
     <p style="margin:10px 0 0;font-size:12px;color:{COLORS['text_muted']};">
-      <a href="{_esc(item.url)}" style="color:{COLORS['accent']};text-decoration:none;font-weight:600;">Read article &rarr;</a>
+      <a href="{_esc(item.url)}" style="color:{COLORS['accent']};text-decoration:none;font-weight:600;">Lees artikel &rarr;</a>
       &nbsp;&middot;&nbsp;{_esc(item.source)}
     </p>
   </td>
@@ -121,7 +145,7 @@ def build_email_html(items: list[ScoredItem], intro: str, date_str: str) -> str:
         if not section_items:
             continue
 
-        rows += _section_header(section)
+        rows += _section_header(SECTION_LABELS[section])
 
         if section == "Research":
             # Research always compact, max 4 items
@@ -145,7 +169,7 @@ def build_email_html(items: list[ScoredItem], intro: str, date_str: str) -> str:
     intro_html = "".join(f"<p>{_esc(p)}</p>" for p in intro.split("\n\n") if p.strip())
 
     return f"""<!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -169,7 +193,7 @@ def build_email_html(items: list[ScoredItem], intro: str, date_str: str) -> str:
                     {NEWSLETTER_NAME}
                   </h1>
                   <p style="margin:2px 0 0;font-size:12px;color:{COLORS['text_muted']};">
-                    Sharp AI signal, twice a week.
+                    Scherp AI-signaal, elke dag.
                   </p>
                 </td>
                 <td align="right">
@@ -185,7 +209,7 @@ def build_email_html(items: list[ScoredItem], intro: str, date_str: str) -> str:
           <td style="padding:16px;margin-top:16px;background:{COLORS['card_bg']};
                      border-radius:8px;border-left:4px solid {COLORS['accent']};">
             <p style="margin:0 0 6px;font-size:10px;font-weight:700;letter-spacing:1px;
-                      text-transform:uppercase;color:{COLORS['accent']};">Editor's note</p>
+                      text-transform:uppercase;color:{COLORS['accent']};">Van de redactie</p>
             <div style="font-size:13px;color:{COLORS['text_secondary']};line-height:1.7;">
               {intro_html}
             </div>
@@ -201,7 +225,7 @@ def build_email_html(items: list[ScoredItem], intro: str, date_str: str) -> str:
           <td style="padding:20px 0;border-top:1px solid {COLORS['border']};
                      text-align:center;">
             <p style="margin:0;font-size:11px;color:{COLORS['text_muted']};">
-              {NEWSLETTER_NAME} &middot; Powered by Claude API &amp; GitHub Actions
+              {NEWSLETTER_NAME} &middot; Gemaakt met Claude API &amp; GitHub Actions
             </p>
           </td>
         </tr>
@@ -216,7 +240,7 @@ def build_email_html(items: list[ScoredItem], intro: str, date_str: str) -> str:
 
 def build_plain_text(items: list[ScoredItem], intro: str, date_str: str) -> str:
     lines = [
-        f"{NEWSLETTER_NAME} — {date_str}",
+        f"{NEWSLETTER_NAME} · {date_str}",
         "=" * 50,
         "",
         intro,
@@ -224,14 +248,14 @@ def build_plain_text(items: list[ScoredItem], intro: str, date_str: str) -> str:
     ]
     for i, item in enumerate(items, 1):
         lines += [
-            f"{i}. [{item.category_tag}] {item.title}",
+            f"{i}. [{SECTION_LABELS.get(item.category_tag, item.category_tag)}] {item.title}",
             f"   {item.summary}",
         ]
         if item.why_it_matters:
-            lines.append(f"   Why it matters: {item.why_it_matters}")
-        lines += [f"   Source: {item.source}", f"   {item.url}", ""]
+            lines.append(f"   Waarom dit telt: {item.why_it_matters}")
+        lines += [f"   Bron: {item.source}", f"   {item.url}", ""]
 
-    lines += ["—", f"{NEWSLETTER_NAME} · Powered by Claude API & GitHub Actions"]
+    lines += ["", f"{NEWSLETTER_NAME} · Gemaakt met Claude API & GitHub Actions"]
     return "\n".join(lines)
 
 
@@ -240,7 +264,7 @@ def build_subject(items: list[ScoredItem], date_str: str) -> str:
     rest = len(items) - 1
     if top and rest > 0:
         short_title = top.title[:60] + ("..." if len(top.title) > 60 else "")
-        return f"{NEWSLETTER_NAME} | {short_title} + {rest} more — {date_str}"
+        return f"{NEWSLETTER_NAME} | {short_title} + {rest} meer · {date_str}"
     elif top:
-        return f"{NEWSLETTER_NAME} | {top.title[:70]} — {date_str}"
-    return f"{NEWSLETTER_NAME} — {date_str}"
+        return f"{NEWSLETTER_NAME} | {top.title[:70]} · {date_str}"
+    return f"{NEWSLETTER_NAME} · {date_str}"
